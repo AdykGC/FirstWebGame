@@ -1,0 +1,45 @@
+my-game/
+  src/
+    main.ts              # точка входа, создание Phaser.Game
+    scenes/
+      BootScene.ts       # предзагрузка критичных ассетов
+      PreloadScene.ts    # загрузка спрайтов, аудио, тайловых карт
+      MenuScene.ts       # главное меню
+      GameScene.ts       # основная игровая сцена
+      UIScene.ts         # интерфейс (HUD)
+    entities/
+      Player.ts
+      Enemy.ts
+    config/
+      gameConfig.ts      # конфиг Phaser (размер, физика и т.д.)
+    utils/
+      input.ts
+      math.ts
+  public/
+    assets/
+      sprites/
+      audio/
+      maps/
+  index.html
+  package.json
+  tsconfig.json
+  vite.config.ts
+
+
+
+
+В main.ts обычно:
+
+ts
+import { Game } from 'phaser';
+import { gameConfig } from './config/gameConfig';
+import { BootScene } from './scenes/BootScene';
+import { PreloadScene } from './scenes/PreloadScene';
+import { MenuScene } from './scenes/MenuScene';
+import { GameScene } from './scenes/GameScene';
+import { UIScene } from './scenes/UIScene';
+
+const game = new Game({
+  ...gameConfig,
+  scene: [BootScene, PreloadScene, MenuScene, GameScene, UIScene],
+});
