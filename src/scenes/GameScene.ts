@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { gameSettings } from '../config/gameSettings';
 
 export class GameScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -16,9 +17,9 @@ export class GameScene extends Phaser.Scene {
     // 1. Создаем фон арены
     this.add.rectangle( this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, 0x2d2d2d );
     
-    // 2. Создаем игрока в центре экрана
-    this.player = this.physics.add.sprite(400, 300, 'playerTexture');
-    this.player.setCollideWorldBounds(true); // Запрещаем выходить за границы 80
+    // 2. Создаем игрока в сцене
+    this.player = this.physics.add.sprite( gameSettings.player.spawn_x, gameSettings.player.spawn_y, gameSettings.player.texture);
+    this.player.setCollideWorldBounds(gameSettings.player.physics.collideWorldBounds); // Запрещаем выходить за границы
     
     // 3. Настраиваем управление (стрелки + WASD)
     // Используем ! (non-null assertion), так как keyboard гарантированно существует в этой конфигурации
@@ -29,9 +30,10 @@ export class GameScene extends Phaser.Scene {
     this.keyD = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
   }
 
+
   // Префикс _ указывает TypeScript, что параметры намеренно не используются (правило noUnusedParameters)
   update(_time: number, _delta: number) {
-    const speed = 200;
+    const speed = gameSettings.player.speed;
     const body = this.player.body as Phaser.Physics.Arcade.Body;
 
     let vx = 0, vy = 0;
