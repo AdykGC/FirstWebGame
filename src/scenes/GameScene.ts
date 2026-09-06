@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { gameSettings } from '../config/gameSettings';
+import { Level } from '../levels/Level'; // Импортируем наш новый класс
+
 
 export class GameScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
@@ -8,26 +10,44 @@ export class GameScene extends Phaser.Scene {
   private keyA!: Phaser.Input.Keyboard.Key;
   private keyS!: Phaser.Input.Keyboard.Key;
   private keyD!: Phaser.Input.Keyboard.Key;
+  private level!: Level;
 
 
   public constructor() { super('GameScene'); }
 
 
+
+  preload() {
+    // Генерируем текстуру игрока (зеленый круг)
+    const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+    graphics.fillStyle(0x00ff00, 1);
+    graphics.fillCircle(16, 16, 16);
+    graphics.generateTexture('playerTexture', 32, 32);
+  }
+
+
+
   create(): void {
     // 1. Создаем фон арены
     this.add.rectangle( this.scale.width / 2, this.scale.height / 2, this.scale.width, this.scale.height, 0x2d2d2d );
-    
-    // 2. Создаем игрока в сцене
+
+    // 2. Инициализируем уровень (стены и здания)
+    this.level = new Level(this);
+
+    // 3. Создаем игрока в сцене
     this.player = this.physics.add.sprite( gameSettings.player.spawn_x, gameSettings.player.spawn_y, gameSettings.player.texture);
     this.player.setCollideWorldBounds(gameSettings.player.physics.collideWorldBounds); // Запрещаем выходить за границы
     
-    // 3. Настраиваем управление (стрелки + WASD)
+    // 4. Настраиваем управление (стрелки + WASD)
     // Используем ! (non-null assertion), так как keyboard гарантированно существует в этой конфигурации
     this.cursors = this.input.keyboard!.createCursorKeys();
     this.keyW = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
     this.keyA = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
     this.keyS = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S);
     this.keyD = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+
+    // 5. ДОБАВЛЯЕМ КОЛЛИЗИЮ: Игрок не может пройти сквозь стены
+    this.physics.add.collider(this.player, this.level.getWalls());
   }
 
 

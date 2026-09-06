@@ -1,3 +1,5 @@
+IDEA : SDU's Map + 2D + Stud sim in gta 1 or 2 style
+
 Ты — опытный геймдев-разработчик на Phaser 3 + TypeScript + Vite.
 Мне нужно собрать MVP 2D-игры с видом сверху (top-down) по следующей структуре проекта:
 
